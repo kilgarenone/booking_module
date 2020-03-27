@@ -24,7 +24,7 @@ const CALENDAR_WEEKS = 5;
 const zeroPad = (value, length) => `${value}`.padStart(length, "0");
 
 // (int) Number days in a month for a given year from 28 - 31
-const getNumOfDaysInGivenMonth = (month = THIS_MONTH, year = THIS_YEAR) => {
+const getNumOfDaysInGivenMonth = (month, year) => {
   const months30 = [4, 6, 9, 11];
   const leapYear = year % 4 === 0;
 
@@ -121,9 +121,10 @@ const getNextMonth = (month, year) => {
   return { month: nextMonth, year: nextMonthYear };
 };
 
-function generateThisMonthCalendar(month = THIS_MONTH, year = THIS_YEAR) {
+function generateThisMonthCalendar(month, year) {
+  const m = month + 1;
   // Get number of days in the month and the month's first day
-  const monthDays = getNumOfDaysInGivenMonth(month, year);
+  const monthDays = getNumOfDaysInGivenMonth(m, year);
   // const monthFirstDay = getFirstDayOfTheMonth(month, year);
 
   // Get number of days to be displayed from previous and next months
@@ -155,7 +156,7 @@ function generateThisMonthCalendar(month = THIS_MONTH, year = THIS_YEAR) {
 
   // Builds dates to be displayed from current month
   return [...new Array(monthDays)].map(
-    (n, index) => `${year}-${zeroPad(month, 2)}-${zeroPad(index + 1, 2)}`
+    (n, index) => `${year}-${zeroPad(m, 2)}-${zeroPad(index + 1, 2)}`
   );
 }
 

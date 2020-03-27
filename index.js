@@ -15,28 +15,23 @@ app.engine(
   hbs({
     extname: "hbs",
     defaultLayout: "layout",
+    helpers: require("./helpers/hbs"),
     layoutsDir: __dirname + "/views/layouts/"
   })
 );
-
-function getDaysArray(start, end) {
-  const oneDay = 24 * 3600 * 1000;
-  const days = [];
-
-  for (let dt = start; dt <= end; dt += oneDay) {
-    days.push(dt);
-  }
-  return days;
-}
 
 const TODAY = Date.now();
 const THREE_WEEKS_FROM_TODAY = TODAY + 1000 * 60 * 60 * 24 * 21;
 
 const todayObj = new Date(TODAY);
+todayObj.setHours(0, 0, 0, 0);
 const threeWeeksFromTodayObj = new Date(THREE_WEEKS_FROM_TODAY);
+threeWeeksFromTodayObj.setHours(0, 0, 0, 0);
 const THIS_MONTH = todayObj.getMonth();
 const MONTH_OF_THREE_WEEKS_FROM_TODAY = threeWeeksFromTodayObj.getMonth();
 const TOTAL_MONTHS_IN_A_YEAR = 12;
+const TOTAL_WEEKDAYS_MINUS_ONE = 6;
+const FIRST_DAY_OF_THE_WEEK = 0;
 const dates = {};
 
 const normalizedTotalMonths =
@@ -45,25 +40,31 @@ const normalizedTotalMonths =
     : MONTH_OF_THREE_WEEKS_FROM_TODAY;
 
 for (
-  let i = THIS_MONTH, j = todayObj.getFullYear();
-  i <= normalizedTotalMonths;
-  i++, j++
+  let month = THIS_MONTH, j = todayObj.getFullYear();
+  month <= normalizedTotalMonths;
+  month++, j++
 ) {
-  console.log("j:", i);
+  console.log("month:", month);
   const monthName = new Date(
     2017,
-    i % TOTAL_MONTHS_IN_A_YEAR,
+    month % TOTAL_MONTHS_IN_A_YEAR,
     1
   ).toLocaleString(undefined, {
     month: "long"
   });
-
   // stop incrementing beyond the year of 3-weeks
   const year = Math.min(j, threeWeeksFromTodayObj.getFullYear());
+  const thisDate = new Date(year, month, 1, 0, 0, 0);
+  const thisDay = thisDate.getDay();
+  // If thisDay's value is '0' which is 'Sunday', then precede it with '6' empty days
+  // because the week starts from Monday, Tuesday, ... Sunday.
+  // If value is '2' which is 'Tuesday', then put 1(2-1) empty day in front of it.
+  const emptyDays = Array(
+    thisDay === FIRST_DAY_OF_THE_WEEK ? TOTAL_WEEKDAYS_MINUS_ONE : thisDay - 1
+  ).fill(0);
 
-  dates[`${monthName} ${year}`] = generateThisMonthCalendar(
-    i % TOTAL_MONTHS_IN_A_YEAR,
-    year
+  dates[`${monthName} ${year}`] = emptyDays.concat(
+    generateThisMonthCalendar(month % TOTAL_MONTHS_IN_A_YEAR, year)
   );
 }
 console.log("dates:", dates);
@@ -72,7 +73,9 @@ console.log("dates:", dates);
 app.get("/", function(req, res, next) {
   res.render("index", {
     title: "Select a Date & Time",
-    dates: ["1212", "33433"]
+    dates,
+    today: todayObj,
+    threeWeeks: threeWeeksFromTodayObj
   });
 });
 

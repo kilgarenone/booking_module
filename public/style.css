@@ -1,0 +1,115 @@
+:root {
+  --black-100: #0b0c0c;
+  --black-80: #424242;
+  --black-60: #555759;
+  --black-50: #626a6e;
+  --black-30: #b1b4b6;
+  --black-20: #e1e3e5;
+  --black-10: #f3f2f1;
+  --font-plain: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto",
+    "Oxygen-Sans", "Ubuntu", "Cantarell", "Helvetica Neue", "Helvetica", "Arial",
+    sans-serif;
+  --font-special: "Times New Roman", "Times", serif;
+  --font-small: 0.8rem;
+  --font-medium: 0.9rem;
+  --font-body-large: 1.15rem;
+  --ratio: 1.414;
+  --s-5: calc(
+    var(--s0) / var(--ratio) / var(--ratio) / var(--ratio) / var(--ratio) /
+      var(--ratio)
+  );
+  --s-4: calc(
+    var(--s0) / var(--ratio) / var(--ratio) / var(--ratio) / var(--ratio)
+  );
+  --s-3: calc(var(--s0) / var(--ratio) / var(--ratio) / var(--ratio));
+  --s-2: calc(var(--s0) / var(--ratio) / var(--ratio));
+  --s-1: calc(var(--s0) / var(--ratio));
+  --s0: 1rem;
+  --s1: calc(var(--s0) * var(--ratio));
+  --s2: calc(var(--s0) * var(--ratio) * var(--ratio));
+  --s3: calc(var(--s0) * var(--ratio) * var(--ratio) * var(--ratio));
+  --s4: calc(
+    var(--s0) * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio)
+  );
+  --s5: calc(
+    var(--s0) * var(--ratio) * var(--ratio) * var(--ratio) * var(--ratio) *
+      var(--ratio)
+  );
+  --line-height: var(--ratio);
+  --line-height-small: calc(0.8 * var(--ratio));
+  --border-radius: 6px;
+  --scrollbarBG: #f0f0f0;
+  --thumbBG: #cdcdcd;
+  --space-color: #ffcdde;
+  --project-color: #fff9c4;
+  --task-color: #e1f5fe;
+  --box-shadow: 0 1px 1px rgba(0, 0, 0, 0.07), 0 2px 2px rgba(0, 0, 0, 0.07),
+    0 4px 4px rgba(0, 0, 0, 0.07), 0 6px 8px rgba(0, 0, 0, 0.07),
+    0 8px 16px rgba(0, 0, 0, 0.07);
+  --cubic-bezier: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --left-side-box-shadow: -1px 0 12px 1px rgba(0, 0, 0, 0.4);
+  --right-side-box-shadow: 9px 0 12px -7px rgba(0, 0, 0, 0.4);
+
+  line-height: var(--ratio);
+  font-size: calc(0.18vw + 1rem);
+  font-family: var(--font-plain);
+  color: var(--black-100);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+  background-color: inherit;
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Set core body defaults */
+body {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+}
+
+/* Make images easier to work with */
+img {
+  max-width: 100%;
+}
+
+svg {
+  background-color: transparent;
+}
+
+/* Inherit fonts for inputs and buttons */
+button,
+input,
+textarea,
+select {
+  color: inherit;
+  font: inherit;
+}
+
+.month {
+  display: flex;
+  flex-wrap: wrap;
+}
+.day {
+  flex-basis: 14.2%;
+  min-width: 14.2%;
+  text-align: center;
+}
+
+.day-header {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-header > div {
+  flex-basis: 14.2%;
+  min-width: 14.2%;
+  text-align: center;
+}
