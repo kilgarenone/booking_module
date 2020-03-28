@@ -126,25 +126,29 @@ select {
 .month-header {
   font-size: 25px;
   font-weight: 600;
+  margin-top: var(--s1);
 }
 .day {
-  height: 50px;
-  width: 50px;
+  height: 47px;
+  width: 47px;
   margin: 0 auto;
   display: block;
   background-color: rgba(0, 162, 255, 0.15);
   color: #00a2ff;
   font-weight: 600;
   border-radius: 50%;
+  cursor: pointer;
 }
 
-h1 {
-  font-family: var(--font-special);
+button {
+  cursor: pointer;
 }
+
 button[disabled] {
   color: rgba(77, 80, 85, 0.6);
   background-color: transparent;
   font-weight: initial;
+  cursor: initial;
 }
 .calendar-weeks th {
   text-transform: uppercase;
@@ -174,6 +178,7 @@ button[disabled] {
   font-size: 20px;
   color: #000;
   border: none;
+  cursor: text;
 }
 .confirm-time-slot {
   width: 46%;
@@ -206,14 +211,19 @@ button[disabled] {
   content: "\2713";
 }
 #app {
-  display: flex;
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
+  padding: var(--s1);
+}
+.booker {
+  display: flex;
+  margin-top: var(--s-1);
 }
 
 #selected-date {
   padding: 5px;
   margin-bottom: 7px;
+  margin-top: var(--s1);
 }
 
 #slots {

@@ -1,53 +1,55 @@
-<h1>{{ title }}</h1>
-<small>Only dates from today and next 3 weeks are available for booking</small>
 <div id="app">
-  <div class="datepicker">
-    {{#each dates }}
-    <h2 class="month-header">{{@key}}</h2>
-    <div>
-      <table class="calendar-weeks">
-        <thead>
-          <tr>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-            <th>Sun</th>
-          </tr>
-        </thead>
-      </table>
-      <div class="">
-        <table class="calendar">
-          <tbody>
-            {{#each this }}
+  <h1>{{ title }}</h1>
+  <p>Select a date and time to book for an inspection</p>
+  <div class="booker">
+    <div class="datepicker">
+      {{#each dates }}
+      <h2 class="month-header">{{@key}}</h2>
+      <div>
+        <table class="calendar-weeks">
+          <thead>
             <tr>
-              {{#each this }}
-              <td>
-                <button
-                  type="button"
-                  class="day"
-                  {{disableDay
-                  this}}
-                  data-date="{{this}}"
-                >
-                  {{day this}}
-                </button>
-              </td>
-              {{/each}}
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+              <th>Sun</th>
             </tr>
-            {{/each}}
-          </tbody>
+          </thead>
         </table>
+        <div class="">
+          <table class="calendar">
+            <tbody>
+              {{#each this }}
+              <tr>
+                {{#each this }}
+                <td>
+                  <button
+                    type="button"
+                    class="day"
+                    {{disableDay
+                    this}}
+                    data-date="{{this}}"
+                  >
+                    {{day this}}
+                  </button>
+                </td>
+                {{/each}}
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       </div>
+      {{/each}}
     </div>
-    {{/each}}
-  </div>
-  <div style="flex:1">
-    <div id="slots">
-      <h3 id="selected-date"></h3>
-      <div id="time-slots"></div>
+    <div style="flex:1">
+      <div id="slots">
+        <h3 id="selected-date"></h3>
+        <div id="time-slots"></div>
+      </div>
     </div>
   </div>
 </div>

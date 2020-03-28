@@ -23,64 +23,65 @@ app.engine(
   })
 );
 
-const TODAY = Date.now();
-const THREE_WEEKS_FROM_TODAY = TODAY + 1000 * 60 * 60 * 24 * 22;
+function buildCalendar() {
+  const TODAY = Date.now();
+  const THREE_WEEKS_FROM_TODAY = TODAY + 1000 * 60 * 60 * 24 * 22;
 
-const todayObj = new Date(TODAY);
-todayObj.setHours(0, 0, 0, 0);
-const threeWeeksFromTodayObj = new Date(THREE_WEEKS_FROM_TODAY);
-threeWeeksFromTodayObj.setHours(0, 0, 0, 0);
-console.log("threeWeeksFromTodayObj:", threeWeeksFromTodayObj);
-const THIS_MONTH = todayObj.getMonth();
-const MONTH_OF_THREE_WEEKS_FROM_TODAY = threeWeeksFromTodayObj.getMonth();
-const TOTAL_MONTHS_IN_A_YEAR = 12;
-const TOTAL_WEEKDAYS_MINUS_ONE = 6;
-const FIRST_DAY_OF_THE_WEEK = 0;
-const dates = {};
+  const todayObj = new Date(TODAY);
+  todayObj.setHours(0, 0, 0, 0);
+  const threeWeeksFromTodayObj = new Date(THREE_WEEKS_FROM_TODAY);
+  threeWeeksFromTodayObj.setHours(0, 0, 0, 0);
+  const THIS_MONTH = todayObj.getMonth();
+  const MONTH_OF_THREE_WEEKS_FROM_TODAY = threeWeeksFromTodayObj.getMonth();
+  const TOTAL_MONTHS_IN_A_YEAR = 12;
+  const TOTAL_WEEKDAYS_MINUS_ONE = 6;
+  const FIRST_DAY_OF_THE_WEEK = 0;
+  const dates = {};
 
-const normalizedTotalMonths =
-  MONTH_OF_THREE_WEEKS_FROM_TODAY < THIS_MONTH
-    ? MONTH_OF_THREE_WEEKS_FROM_TODAY + TOTAL_MONTHS_IN_A_YEAR
-    : MONTH_OF_THREE_WEEKS_FROM_TODAY;
+  const normalizedTotalMonths =
+    MONTH_OF_THREE_WEEKS_FROM_TODAY < THIS_MONTH
+      ? MONTH_OF_THREE_WEEKS_FROM_TODAY + TOTAL_MONTHS_IN_A_YEAR
+      : MONTH_OF_THREE_WEEKS_FROM_TODAY;
 
-for (
-  let month = THIS_MONTH, j = todayObj.getFullYear();
-  month <= normalizedTotalMonths;
-  month++, j++
-) {
-  console.log("month:", month);
-  const monthName = new Date(
-    2017,
-    month % TOTAL_MONTHS_IN_A_YEAR,
-    1
-  ).toLocaleString(undefined, {
-    month: "long"
-  });
-  // stop incrementing beyond the year of 3-weeks
-  const year = Math.min(j, threeWeeksFromTodayObj.getFullYear());
-  const thisDate = new Date(year, month, 1, 0, 0, 0);
-  const thisDay = thisDate.getDay();
-  // If thisDay's value is '0' which is 'Sunday', then precede it with '6' empty days
-  // because the week starts from Monday, Tuesday, ... Sunday.
-  // If value is '2' which is 'Tuesday', then put 1(2-1) empty day in front of it.
-  const emptyDays = Array(
-    thisDay === FIRST_DAY_OF_THE_WEEK ? TOTAL_WEEKDAYS_MINUS_ONE : thisDay - 1
-  ).fill(0);
+  for (
+    let month = THIS_MONTH, j = todayObj.getFullYear();
+    month <= normalizedTotalMonths;
+    month++, j++
+  ) {
+    const monthName = new Date(
+      2017,
+      month % TOTAL_MONTHS_IN_A_YEAR,
+      1
+    ).toLocaleString(undefined, {
+      month: "long"
+    });
+    // stop incrementing beyond the year of 3-weeks
+    const year = Math.min(j, threeWeeksFromTodayObj.getFullYear());
+    const thisDate = new Date(year, month, 1, 0, 0, 0);
+    const thisDay = thisDate.getDay();
+    // If thisDay's value is '0' which is 'Sunday', then precede it with '6' empty days
+    // because the week starts from Monday, Tuesday, ... Sunday.
+    // If value is '2' which is 'Tuesday', then put 1(2-1) empty day in front of it.
+    const emptyDays = Array(
+      thisDay === FIRST_DAY_OF_THE_WEEK ? TOTAL_WEEKDAYS_MINUS_ONE : thisDay - 1
+    ).fill(0);
 
-  const days = emptyDays.concat(
-    generateThisMonthCalendar(month % TOTAL_MONTHS_IN_A_YEAR, year)
-  );
+    const days = emptyDays.concat(
+      generateThisMonthCalendar(month % TOTAL_MONTHS_IN_A_YEAR, year)
+    );
 
-  const chunks = [];
-  for (let i = 0; i < days.length; i += 7) {
-    chunks.push(days.slice(i, i + 7));
+    const chunks = [];
+    for (let i = 0; i < days.length; i += 7) {
+      chunks.push(days.slice(i, i + 7));
+    }
+    dates[`${monthName} ${year}`] = chunks;
   }
-  dates[`${monthName} ${year}`] = chunks;
+
+  return { dates, todayObj, threeWeeksFromTodayObj };
 }
 
-// console.log("dates:", dates);
-
 app.get("/", function(req, res, next) {
+  const { dates, todayObj, threeWeeksFromTodayObj } = buildCalendar();
   res.render("index", {
     title: "Select a Date & Time",
     dates,
@@ -117,7 +118,6 @@ async function generateTimeSlots(date) {
   const endTime = "18:00";
   const timeSlots = [];
   let dateStorage = await storage.getItem(date); // yourname
-  console.log("dateStorage:", dateStorage);
 
   while (startTime !== endTime) {
     const time = addMinutes(startTime, interval);
@@ -143,10 +143,6 @@ function initSocket() {
     client.on("getTimeSlots", async function(date, cb) {
       const slots = await generateTimeSlots(date);
       cb(slots);
-      // const bids = await storage.getItem("name"); // yourname
-      // console.log("bids:", bids);
-
-      // cb(bids);
     });
 
     client.on("confirmBooking", async function(datetime, cb) {
