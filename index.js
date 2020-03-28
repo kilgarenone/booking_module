@@ -89,8 +89,9 @@ app.get("/", function(req, res, next) {
   });
 });
 
-server.listen(4000, function() {
-  console.log("listening to requests on port 4000");
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, function() {
+  console.log(`listening to requests on port ${PORT}`);
 });
 
 function addMinutes(time, minutes) {
