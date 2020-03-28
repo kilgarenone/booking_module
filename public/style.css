@@ -93,23 +93,112 @@ select {
   font: inherit;
 }
 
-.month {
-  display: flex;
-  flex-wrap: wrap;
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbarBG);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+}
+
+#time-slots {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+.datepicker table {
+  border-spacing: 0 8px;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+}
+.datepicker {
+  flex: 2;
+  margin-right: 40px;
+  /* max-width: 50%; */
+}
+
+.month-header {
+  font-size: 25px;
+  font-weight: 600;
 }
 .day {
-  flex-basis: 14.2%;
-  min-width: 14.2%;
-  text-align: center;
+  height: 50px;
+  width: 50px;
+  margin: 0 auto;
+  display: block;
+  background-color: rgba(0, 162, 255, 0.15);
+  color: #00a2ff;
+  font-weight: 600;
+  border-radius: 50%;
 }
 
-.day-header {
+h1 {
+  font-family: var(--font-special);
+}
+button[disabled] {
+  color: rgba(77, 80, 85, 0.6);
+  background-color: transparent;
+  font-weight: initial;
+}
+.calendar-weeks th {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+#time-slots {
+  overflow: auto;
+  max-height: 500px;
+  padding-right: 15px;
+}
+.time-slot {
+  width: 100%;
+  height: 55px;
+  text-align: center;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: rgb(0, 162, 255);
+  border: 1px solid rgba(0, 162, 255, 0.5);
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.js-selected-time-slot {
+  width: 50%;
+  margin-right: 4%;
+  font-size: 20px;
+  color: #000;
+  border: none;
+}
+.confirm-time-slot {
+  width: 46%;
+  height: 55px;
+  border-radius: 5px;
+  background-color: #0091ea;
+  color: #fff;
+  text-align: center;
+}
+.time-slot:hover {
+  border-color: rgb(0, 162, 255);
+  border-width: 2px;
+}
+#app {
   display: flex;
-  flex-wrap: wrap;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.day-header > div {
-  flex-basis: 14.2%;
-  min-width: 14.2%;
-  text-align: center;
+#selected-date {
+  padding: 5px;
+  margin-bottom: 7px;
+}
+
+#slots {
+  position: sticky;
+  top: 20px;
 }
