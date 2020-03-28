@@ -5,6 +5,8 @@ module.exports = {
   disableDay: function(date, options) {
     const { today, threeWeeks } = options.data.root;
     const dt = new Date(date);
-    return dt >= today && dt <= threeWeeks ? "" : "disabled";
+    return dt >= today && dt <= threeWeeks && dt.getDay() !== 0
+      ? ""
+      : "disabled";
   }
 };

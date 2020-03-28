@@ -108,52 +108,75 @@ function addMinutes(time, minutes) {
   return timeSlot;
 }
 
-function generateTimeSlots() {
+async function generateTimeSlots(date) {
+  const dt = new Date(date);
+  const isSaturday = dt.getDay() === 6;
   let startTime = "8:30";
   const interval = "30";
   const endTime = "18:00";
   const timeSlots = [];
+  let dateStorage = await storage.getItem(date); // yourname
+  console.log("dateStorage:", dateStorage);
 
   while (startTime !== endTime) {
     const time = addMinutes(startTime, interval);
-    timeSlots.push(time);
-    startTime = `${time[0]}:${time[1]}`;
+    const currentSlotCount = (dateStorage && dateStorage[time.join(":")]) || 0;
+    timeSlots.push({
+      time,
+      disabled: isSaturday ? currentSlotCount >= 4 : currentSlotCount >= 2
+    });
+    startTime = time.join(":");
   }
 
   return timeSlots;
 }
-// init();
+init();
 
-// async function init() {
-//   await storage.init(/* options ... */);
-//   initSocket();
-// }
+async function init() {
+  await storage.init(/* options ... */);
+  initSocket();
+}
 
-// function initSocket() {
-io.on("connection", function(client) {
-  client.on("getTimeSlots", async function(date, cb) {
-    // console.log("cb:", cb);
-    // console.log("date:", date);
-    cb(generateTimeSlots());
-    // const bids = await storage.getItem("name"); // yourname
-    // console.log("bids:", bids);
+function initSocket() {
+  io.on("connection", function(client) {
+    client.on("getTimeSlots", async function(date, cb) {
+      const slots = await generateTimeSlots(date);
+      cb(slots);
+      // const bids = await storage.getItem("name"); // yourname
+      // console.log("bids:", bids);
 
-    // cb(bids);
+      // cb(bids);
+    });
+
+    client.on("confirmBooking", async function(datetime, cb) {
+      const dt = new Date(datetime);
+      const mins = dt.getMinutes();
+      const timeSlot = `${dt.getHours()}:${
+        mins.toString().length == 1 ? "0" + mins : mins
+      }`;
+      const isSaturday = dt.getDay() === 6;
+
+      const date = datetime.slice(0, 10);
+      let dateStorage = await storage.getItem(date); // yourname
+
+      if (!dateStorage) {
+        dateStorage = {};
+        dateStorage[timeSlot] = 1;
+      } else {
+        if (!dateStorage[timeSlot]) {
+          dateStorage[timeSlot] = 1;
+        } else {
+          dateStorage[timeSlot] = dateStorage[timeSlot] + 1;
+          if (isSaturday && dateStorage[timeSlot] >= 4) {
+            client.broadcast.emit("disableTimeSlot", datetime);
+          }
+          if (!isSaturday && dateStorage[timeSlot] >= 2) {
+            client.broadcast.emit("disableTimeSlot", datetime);
+          }
+        }
+      }
+      await storage.setItem(date, dateStorage); // yourname
+      cb();
+    });
   });
-  client.on("confirmBooking", async function(datetime) {
-    console.log("datetime:", new Date(datetime).getHours());
-    // io.emit("chat", data);
-  });
-
-  // // listen to 'chat' emitted from client
-  // client.on("chat", async function(cb) {
-  //   // then broadcast 'chat' along with data to all clients(including emitter) listening on 'chat' event
-  //   const bids = await storage.getItem("name"); // yourname
-
-  //   cb(bids);
-  //   // io.emit("chat", data);
-  //   // emit to other clients execept the emitter
-  //   // socket.broadcast.emit("chat", data);
-  // });
-});
-// }
+}

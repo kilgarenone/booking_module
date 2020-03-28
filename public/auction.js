@@ -63,23 +63,33 @@ slotsContainer.addEventListener("click", function(event) {
     socket.emit(
       "confirmBooking",
       event.target.previousSibling.dataset.datetime,
-      handleBookingSuccess
+      handleBookingSuccess.bind(event.target.previousSibling)
     );
   }
 });
 
-function handleBookingSuccess() {}
+function handleBookingSuccess() {
+  this.nextSibling.remove();
+  this.classList.remove("js-selected-time-slot");
+  this.classList.add("booked");
+}
 
 function displayTimeSlots(date, slots) {
+  console.log("slots:", slots);
   slotsContainer.innerHTML = "";
 
-  for (const [hour, minutes] of slots) {
+  for (const {
+    time: [hour, minutes],
+    disabled
+  } of slots) {
     const amOrPm = hour >= 12 ? "pm" : "am";
     const slot = `${hour > 12 ? hour - 12 : hour}:${minutes}${amOrPm}`;
 
     slotsContainer.insertAdjacentHTML(
       "beforeend",
-      `<div style="position:relative;white-space:nowrap"><button class="time-slot" data-datetime=${new Date(
+      `<div style="position:relative;white-space:nowrap"><button class="time-slot" ${
+        disabled ? `disabled` : ""
+      } data-datetime=${new Date(
         `${date} ${hour}:${minutes}`
       ).toISOString()} type="button">${slot}</button></div>`
     );
@@ -92,6 +102,8 @@ function displayTimeSlots(date, slots) {
 // });
 
 // // client is listening on 'chat' event emitted from server, receiving data too
-// socket.on("chat", function() {
-//   auctionFeeds.innerHTML += data.hello;
-// });
+socket.on("disableTimeSlot", function(slot) {
+  const slotEle = document.querySelectorAll(`[data-datetime="${slot}"]`)[0];
+  if (!slotEle) return;
+  slotEle.setAttribute("disabled", true);
+});

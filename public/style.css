@@ -166,7 +166,7 @@ button[disabled] {
   color: rgb(0, 162, 255);
   border: 1px solid rgba(0, 162, 255, 0.5);
   font-weight: 600;
-  transition: all 0.3s;
+  transition: width 0.2s, font-size 0.2s, colot 0.2s;
 }
 .js-selected-time-slot {
   width: 50%;
@@ -186,6 +186,24 @@ button[disabled] {
 .time-slot:hover {
   border-color: rgb(0, 162, 255);
   border-width: 2px;
+}
+.time-slot[disabled] {
+  background: #ddd;
+  border: none;
+  color: gray;
+}
+.booked {
+  position: relative;
+  background-color: #69f0ae;
+  color: #000;
+  border: none;
+}
+.booked::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 0.7rem;
+  content: "\2713";
 }
 #app {
   display: flex;
