@@ -118,6 +118,7 @@ async function generateTimeSlots(date) {
   const endTime = "18:00";
   const timeSlots = [];
   let dateStorage = await storage.getItem(date); // yourname
+  console.log("dateStorage:", dateStorage);
 
   while (startTime !== endTime) {
     const time = addMinutes(startTime, interval);
@@ -134,7 +135,7 @@ async function generateTimeSlots(date) {
 init();
 
 async function init() {
-  await storage.init(/* options ... */);
+  await storage.init({ dir: "./storage" });
   initSocket();
 }
 
