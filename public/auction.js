@@ -87,11 +87,11 @@ function displayTimeSlots(date, slots) {
 
     slotsContainer.insertAdjacentHTML(
       "beforeend",
-      `<div style="position:relative;white-space:nowrap"><button class="time-slot" ${
+      `<li style="position:relative;white-space:nowrap"><button class="time-slot" ${
         disabled ? `disabled` : ""
       } data-datetime=${new Date(
         `${date} ${hour}:${minutes}`
-      ).toISOString()} type="button">${slot}</button></div>`
+      ).toISOString()} type="button">${slot}</button></li>`
     );
   }
 }
