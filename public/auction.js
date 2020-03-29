@@ -1,8 +1,9 @@
 const socket = io();
 
 // Get elements
-const calendars = document.getElementsByClassName("calendar");
+const calendarsEle = document.getElementsByClassName("calendar");
 const selectedDateEle = document.getElementById("selected-date");
+const slotsContainerEle = document.getElementById("time-slots");
 
 const options = {
   weekday: "long",
@@ -10,7 +11,7 @@ const options = {
   day: "numeric"
 };
 
-for (let cal of calendars) {
+for (let cal of calendarsEle) {
   cal.addEventListener(
     "click",
     function(event) {
@@ -19,6 +20,7 @@ for (let cal of calendars) {
       if (ele.nodeName !== "BUTTON") return;
 
       const date = ele.dataset.date;
+
       selectedDateEle.innerHTML = new Date(date).toLocaleString(
         "en-US",
         options
@@ -34,9 +36,8 @@ for (let cal of calendars) {
   );
 }
 
-const slotsContainer = document.getElementById("time-slots");
-
-slotsContainer.addEventListener("click", function(event) {
+slotsContainerEle.addEventListener("click", function(event) {
+  // if clicking on a new time slot
   if (
     event.target.classList.contains("time-slot") &&
     !event.target.classList.contains("js-selected-time-slot")
@@ -59,6 +60,7 @@ slotsContainer.addEventListener("click", function(event) {
     return;
   }
 
+  // if click on the confirm button
   if (event.target.classList.contains("confirm-time-slot")) {
     socket.emit(
       "confirmBooking",
@@ -75,7 +77,8 @@ function handleBookingSuccess() {
 }
 
 function displayTimeSlots(date, slots) {
-  slotsContainer.innerHTML = "";
+  // clear content
+  slotsContainerEle.innerHTML = "";
 
   for (const {
     time: [hour, minutes],
@@ -84,7 +87,7 @@ function displayTimeSlots(date, slots) {
     const amOrPm = hour >= 12 ? "pm" : "am";
     const slot = `${hour > 12 ? hour - 12 : hour}:${minutes}${amOrPm}`;
 
-    slotsContainer.insertAdjacentHTML(
+    slotsContainerEle.insertAdjacentHTML(
       "beforeend",
       `<li style="position:relative;white-space:nowrap"><button class="time-slot" ${
         disabled ? `disabled` : ""
@@ -95,14 +98,8 @@ function displayTimeSlots(date, slots) {
   }
 }
 
-// enter.addEventListener("click", function() {
-//   // emit 'chat' event to server's socket along with some data
-//   socket.emit("join", displayBids);
-// });
-
-// // client is listening on 'chat' event emitted from server, receiving data too
 socket.on("disableTimeSlot", function(slot) {
   const slotEle = document.querySelectorAll(`[data-datetime="${slot}"]`)[0];
-  if (!slotEle) return;
-  slotEle.setAttribute("disabled", true);
+
+  slotEle && slotEle.setAttribute("disabled", true);
 });

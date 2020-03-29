@@ -80,10 +80,6 @@ img {
   max-width: 100%;
 }
 
-svg {
-  background-color: transparent;
-}
-
 /* Inherit fonts for inputs and buttons */
 button,
 input,
@@ -120,7 +116,6 @@ select {
 .datepicker {
   flex: 2;
   margin-right: 40px;
-  /* max-width: 50%; */
 }
 
 .month-header {
