@@ -118,7 +118,6 @@ async function generateTimeSlots(date) {
   const endTime = "18:00";
   const timeSlots = [];
   let dateStorage = await storage.getItem(date); // yourname
-  console.log("dateStorage:", dateStorage);
 
   while (startTime !== endTime) {
     const time = addMinutes(startTime, interval);
@@ -151,7 +150,6 @@ function initSocket() {
         timeZone: "Asia/Kuala_Lumpur"
       });
       const dt = new Date(asiaTime);
-      console.log("dt:", dt);
       const mins = dt.getMinutes();
       const timeSlot = `${dt.getHours()}:${
         mins.toString().length == 1 ? "0" + mins : mins

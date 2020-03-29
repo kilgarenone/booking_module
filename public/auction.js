@@ -75,7 +75,6 @@ function handleBookingSuccess() {
 }
 
 function displayTimeSlots(date, slots) {
-  console.log("slots:", slots);
   slotsContainer.innerHTML = "";
 
   for (const {
