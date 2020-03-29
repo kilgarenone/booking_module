@@ -147,7 +147,11 @@ function initSocket() {
     });
 
     client.on("confirmBooking", async function(datetime, cb) {
-      const dt = new Date(datetime);
+      var asiaTime = new Date(datetime).toLocaleString("en-US", {
+        timeZone: "Asia/Kuala_Lumpur"
+      });
+      const dt = new Date(asiaTime);
+      console.log("dt:", dt);
       const mins = dt.getMinutes();
       const timeSlot = `${dt.getHours()}:${
         mins.toString().length == 1 ? "0" + mins : mins
