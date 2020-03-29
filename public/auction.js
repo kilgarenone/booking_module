@@ -18,7 +18,9 @@ for (let cal of calendarsEle) {
       const ele = event.target;
 
       if (ele.nodeName !== "BUTTON") return;
-
+      const selectedDayEle = document.querySelector(".day.selected");
+      selectedDayEle && selectedDayEle.classList.remove("selected");
+      ele.classList.add("selected");
       const date = ele.dataset.date;
 
       selectedDateEle.innerHTML = new Date(date).toLocaleString(

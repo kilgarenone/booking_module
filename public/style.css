@@ -133,6 +133,15 @@ select {
   font-weight: 600;
   border-radius: 50%;
   cursor: pointer;
+  transition: transform 0.1s;
+  will-change: transform;
+}
+.day:not([disabled]):hover {
+  transform: scale(1.08);
+}
+.day.selected {
+  background-color: #69f0ae;
+  color: #000;
 }
 
 button {
