@@ -158,6 +158,7 @@ button[disabled] {
 
 .scrollbox {
   overflow: auto;
+  overflow-x: hidden;
   max-height: 500px;
   padding-right: 15px;
   background: /* Shadow covers */ linear-gradient(
