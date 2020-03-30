@@ -82,6 +82,8 @@ function displayTimeSlots(date, slots) {
   // clear content
   slotsContainerEle.innerHTML = "";
 
+  const currentHour = new Date().getHours();
+
   for (const {
     time: [hour, minutes],
     disabled
@@ -92,7 +94,7 @@ function displayTimeSlots(date, slots) {
     slotsContainerEle.insertAdjacentHTML(
       "beforeend",
       `<li style="position:relative;white-space:nowrap"><button class="time-slot" ${
-        disabled ? `disabled` : ""
+        disabled || currentHour === hour ? `disabled` : ""
       } data-datetime=${new Date(
         `${date} ${hour}:${minutes}`
       ).toISOString()} type="button">${slot}</button></li>`
